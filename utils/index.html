@@ -217,7 +217,23 @@
         updateCartUI();
     }
 
+    function updateCartUI() {
+        const container = document.getElementById('cart-container');
+        if (cart.length === 0) {
+            container.innerHTML = '<p class="text-center text-muted mt-5">Cart is empty</p>';
+            document.getElementById('cart-total').innerText = 'Rs. 0';
+            return;
+        }
 
+        container.innerHTML = cart.map((item, index) => `
+            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                <div>
+                    <div class="fw-bold small">${item.name}</div>
+                    <div class="text-muted extra-small">Rs. ${item.price}</div>
+                </div>
+                <button class="btn btn-sm text-danger" onclick="removeFromCart(${index})">✕</button>
+            </div>
+        `).join('');
 
         const total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = `Rs. ${total}`;
@@ -228,27 +244,6 @@
         updateCartUI();
     }
 
-    function confirmOrder() {
-        if(cart.length === 0) {
-            Swal.fire('Empty Cart', 'Please add items before confirming.', 'warning');
-            return;
-        }
-
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        const customerName = document.getElementById('order-customer-select').value;
-        const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-        const time = new Date().toLocaleTimeString();
-
-        totalRevenue += total;
-        salesHistory.unshift({ id: orderId, customer: customerName, total: total, time: time });
-
-        Swal.fire({ icon: 'success', title: 'Order Completed', text: `Total: Rs. ${total}`, confirmButtonColor: '#198754' });
-
-        cart = [];
-        updateCartUI();
-        renderHistory();
-        updateDashboard();
-    }
 
     function renderStock() {
         document.getElementById('stock-table-body').innerHTML = stockItems.map(item => `
