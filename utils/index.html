@@ -196,30 +196,28 @@
         element.classList.add('active');
     }
 
+    function renderPOS() {
+        const grid = document.getElementById('pos-item-grid');
+        grid.innerHTML = stockItems.map(item => `
+            <div class="col-md-3">
+                <div class="menu-card p-3 text-center border rounded-4 shadow-sm h-100" onclick="addToCart('${item.name}', ${item.price})">
+                    <div style="font-size: 2.2rem;">${item.icon}</div>
+                    <div class="fw-bold mt-2 text-dark">${item.name}</div>
+                    <div class="text-success fw-bold small">Rs. ${item.price}.00</div>
+                </div>
+            </div>
+        `).join('');
 
+        const select = document.getElementById('order-customer-select');
+        select.innerHTML = customers.map(c => `<option value="${c.name}">${c.name} - ${c.phone}</option>`).join('');
+    }
 
     function addToCart(name, price) {
         cart.push({ name, price });
         updateCartUI();
     }
 
-    function updateCartUI() {
-        const container = document.getElementById('cart-container');
-        if (cart.length === 0) {
-            container.innerHTML = '<p class="text-center text-muted mt-5">Cart is empty</p>';
-            document.getElementById('cart-total').innerText = 'Rs. 0';
-            return;
-        }
 
-        container.innerHTML = cart.map((item, index) => `
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                <div>
-                    <div class="fw-bold small">${item.name}</div>
-                    <div class="text-muted extra-small">Rs. ${item.price}</div>
-                </div>
-                <button class="btn btn-sm text-danger" onclick="removeFromCart(${index})">✕</button>
-            </div>
-        `).join('');
 
         const total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('cart-total').innerText = `Rs. ${total}`;
