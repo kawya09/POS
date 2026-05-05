@@ -287,6 +287,33 @@
         `).join('');
     }
 
+    function addNewCustomer() {
+        Swal.fire({
+            title: 'Add New Customer',
+            html: `<input id="swal-name" class="swal2-input" placeholder="Name">
+                   <input id="swal-phone" class="swal2-input" placeholder="Phone">`,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Save Customer',
+            confirmButtonColor: '#198754',
+            preConfirm: () => {
+                const name = document.getElementById('swal-name').value;
+                const phone = document.getElementById('swal-phone').value;
+                if (!name || !phone) {
+                    Swal.showValidationMessage('Please enter both name and phone');
+                }
+                return { name, phone };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                customers.push(result.value);
+                renderCustomers();
+                renderPOS(); // Update ordering dropdown
+                updateDashboard();
+                Swal.fire('Success', 'Customer added successfully!', 'success');
+            }
+        });
+    }
 
     function renderHistory() {
         document.getElementById('history-table-body').innerHTML = salesHistory.map(order => `
