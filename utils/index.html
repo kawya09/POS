@@ -266,34 +266,27 @@
         updateDashboard();
     }
 
-
-    function addNewCustomer() {
-        Swal.fire({
-            title: 'Add New Customer',
-            html: `<input id="swal-name" class="swal2-input" placeholder="Name">
-                   <input id="swal-phone" class="swal2-input" placeholder="Phone">`,
-            focusConfirm: false,
-            showCancelButton: true,
-            confirmButtonText: 'Save Customer',
-            confirmButtonColor: '#198754',
-            preConfirm: () => {
-                const name = document.getElementById('swal-name').value;
-                const phone = document.getElementById('swal-phone').value;
-                if (!name || !phone) {
-                    Swal.showValidationMessage('Please enter both name and phone');
-                }
-                return { name, phone };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                customers.push(result.value);
-                renderCustomers();
-                renderPOS(); // Update ordering dropdown
-                updateDashboard();
-                Swal.fire('Success', 'Customer added successfully!', 'success');
-            }
-        });
+    function renderStock() {
+        document.getElementById('stock-table-body').innerHTML = stockItems.map(item => `
+            <tr>
+                <td class="ps-4 fw-bold">${item.icon} ${item.name}</td>
+                <td>Rs. ${item.price}</td>
+                <td><span class="badge bg-success-subtle text-success px-3 rounded-pill">${item.qty} available</span></td>
+            </tr>
+        `).join('');
     }
+
+    function renderCustomers() {
+        document.getElementById('customer-container').innerHTML = customers.map(c => `
+            <div class="col-md-4">
+                <div class="card p-3 glass-card border-0 shadow-sm border-start border-success border-4">
+                    <div class="fw-bold text-dark">${c.name}</div>
+                    <div class="text-muted small"><i class="bi bi-telephone"></i> ${c.phone}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
 
     function renderHistory() {
         document.getElementById('history-table-body').innerHTML = salesHistory.map(order => `
